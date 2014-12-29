@@ -8,8 +8,6 @@
 #               0.1 - added cleanup logic
 #               0.2 - configured for backup_cron.sh to run for the root user at CWD
 
-# =================   F U N C T I O N S   S E C T I O N   ======================
-
 #---------------------------- cleanup_old_files () -----------------------------
 cleanup_old_files()
 {
