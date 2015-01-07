@@ -13,7 +13,7 @@
 ## Changelog:   0.1 - Initial Release
 ##              0.2 - Cleaned up script a little and modifed functions
 ##              0.3 - Added mysql db functions for daemon status and db
-##				0.4 - Added function to check logs for errors
+##		0.4 - Added function to check logs for errors
 ##
 ############################################################################
 
@@ -31,17 +31,20 @@ export USEDSBC=`echo "scale=2;if($USEDSWAP<1024 && $USEDSWAP > 0) print 0;$USEDS
 export FREESWAP=`free -m |  tail -1| awk '{print $4}'`
 export FREESBC=`echo "scale=2;if($FREESWAP<1024 && $FREESWAP > 0) print 0;$FREESWAP/1024"|bc -l`
 
+
 # Other Settings
-Today=$(date +%m-%d-%Y)
-SRVHB=/home/kadmin/srv_health_logs
-HealthReport="`hostname`_health-`date +%y%m%d`-`date +%H%M`.txt"
+export Today=$(date +%m-%d-%Y)
+export SRVHB="/root/srv_health_logs"
+export HealthReport="`hostname`_health-`date +%y%m%d`-`date +%H%M`.txt"
 
 # Email Settings
 export Subject="Server Health Report for `hostname` on $Today"
-export emlToCC='mwilson@glassnetworks.net'
-export emlFrom='ServerHealthAdmin <no-reply@glassnetworks.net>'
+export emlToCC='admin@yourcompany.com'
+
+export emlFrom='ServerHealthAdmin <no-reply@yourcompany.com'
 export emlBody="${SRVHB}/health_report_body.eml"
 export emlAttach=${SRVHB}/${HealthReport}
+echo "Please open the attachment to view the log files." > $emlBody
 
 # Create server health backup directory
 if [ ! -d "${SRVHB}" ]
@@ -77,6 +80,8 @@ function cpuInfo()
 	echo -e "CPU LOAD --> Threshold < 1 Normal | >= 1 Caution | >= 2 Unhealthy "
 	dLineNew
 	echo -e "Load Average   : `uptime | awk -F'load average:' '{ print $2 }' | cut -f1 -d,`"
+
+
 	echo -e "Heath Status : `uptime | awk -F'load average:' '{ print $2 }' | cut -f1 -d, | awk '{if ($1 > 2) print "Unhealthy"; else if ($1 > 1) print "Caution"; else print "Normal"}'`"\\n
 
 	dLine
@@ -173,14 +178,25 @@ function mysqlDBInfo()
 	echo -e "MySQL Process Status "
 	dLine
 	ps -ef | grep -v grep|grep -v libexec| grep mysqld|cut -f25-100 -d" "
+	procd=`ps -ef | grep -v grep|grep -v libexec| grep mysqld|cut -f25-100 -d" "`
+	echo -e "\nProcess ID: $pidid"
+	echo -e "Service Info: $procd"
+
+
 	dLine
 	mysqladmin status -u dbstatus
+
 	dLine
 	echo -e "MySQL Log Errors "
 	dLine
 	if [[ -n $(grep -i error /var/log/mysqld.log) ]]; then
+
                 grep -i error /var/log/mysqld.log
+
         else
+
+
+
                 echo -e "/var/log/mysqld.log contains no errors"
         fi
 	dLine
@@ -192,8 +208,10 @@ function sysLogErrors()
 	echo -e "System/Messages Errors "
 	dLine
 	if [[ -n $(grep -i error /var/log/messages) ]]; then
+
 		grep -i error /var/log/messages
 	else
+
 		echo -e "/var/log/messages contains no errors"
 	fi
 	echo
@@ -205,8 +223,10 @@ function sudoLogErrors()
 	echo -e "SUDO Log Errors "
 	dLine
 	if [[ -n $(grep -i error /var/log/secure) ]]; then
+
 		grep -i error /var/log/secure
 	else
+
 		echo -e "/var/log/secure contains no errors"
 	fi
 	echo
@@ -231,6 +251,7 @@ function doMail()
 		STATUS=`which mutt`
 		if [[ "$?" != 0 ]]; then
 			echo "The program 'mutt' is currently not installed."
+
 		else
 			echo -e "\nEmail From: $emlFrom"
 			echo "Email Subject: $Subject"
@@ -259,6 +280,6 @@ diskInfo >> $SRVHB/$HealthReport
 sysLogErrors >> $SRVHB/$HealthReport
 sudoLogErrors >> $SRVHB/$HealthReport
 mysqlDBInfo >> $SRVHB/$HealthReport
-#oraInfo >> $SRVHB/$HealthReport
+oraInfo >> $SRVHB/$HealthReport
 doMail
 cleanUp
