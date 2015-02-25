@@ -12,7 +12,7 @@ export vers="patchCheck Version 0.2"
 # source root bash profile
 . /root/.bash_profile
 
-EMAIL='mwilson@omgroupllc.com'
+EMAIL='administrator@test.com'
 
 export DS=$(date +%m-%d-%Y_%H%M)
 export DSD=$(date +%m-%d-%Y)
