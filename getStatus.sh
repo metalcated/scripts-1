@@ -1,10 +1,9 @@
 #!/bin/bash
 ###########################################################################
 ##
-## Authors:     Michael Wilson mwilson@glassnetworks.net
-## 				Mike Gomon mgomon@glassnetworks.net
+## Authors:     Michael Wilson and Mike Gomon 
 ##
-## Purpose:		Script to gather information on specific hosts
+## Purpose:	Script to gather information on specific hosts
 ##
 ## Created:     10/07/2014
 ## Modified:	11/06/2014
