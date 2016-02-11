@@ -1,8 +1,7 @@
 #!/bin/bash
 ###########################################################################
 ##
-## Authors:     Michael Wilson mwilson@glassnetworks.net
-## 				Mike Gomon mgomon@glassnetworks.net
+## Authors:     Michael Wilson & Mike Gomon 
 ##
 ## Purpose:		Script to gather information on specific hosts
 ##
